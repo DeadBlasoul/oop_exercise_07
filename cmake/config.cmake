@@ -29,7 +29,7 @@ verbose_log(MESSAGE "Project source dirs: " ${PROJECT_SRC_DIRS})
 
 # Main targets names
 set(App ${ProjectName})
-set(Lib lib${ProjectName})
+set(Lib app_lib)
 verbose_log(MESSAGE "Application name: " ${App})
 verbose_log(MESSAGE "Main library name: " ${Lib})
 
