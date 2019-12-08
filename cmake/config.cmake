@@ -37,3 +37,4 @@ verbose_log(MESSAGE "Main library name: " ${Lib})
 set(PROJECT_THIRD_PARTY_FOLDER ${PROJECT_SOURCE_DIR}/third_party CACHE STRING "Third party folder")
 
 find_package(SDL2)
+set_target_properties(SDL2 PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
