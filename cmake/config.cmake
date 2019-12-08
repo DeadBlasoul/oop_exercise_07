@@ -22,14 +22,14 @@ function(verbose_log)
 endfunction(verbose_log)
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ language standard")
-set(PROJECT_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)
+set(PROJECT_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/src)
 set(PROJECT_SRC_DIRS     ${PROJECT_SOURCE_DIR}/src)
 verbose_log(MESSAGE "Project include dirs: " ${PROJECT_INCLUDE_DIRS})
 verbose_log(MESSAGE "Project source dirs: " ${PROJECT_SRC_DIRS})
 
 # Main targets names
 set(App ${ProjectName})
-set(Lib app_lib)
+set(Lib lib)
 verbose_log(MESSAGE "Application name: " ${App})
 verbose_log(MESSAGE "Main library name: " ${Lib})
 
