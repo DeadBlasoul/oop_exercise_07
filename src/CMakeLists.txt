@@ -1,4 +1,4 @@
 file(GLOB_RECURSE Lib_SRC_FILES
-    NAME "*.c" "*.cpp")
+    NAME "*.h" "*.hpp" "*.c" "*.cpp")
 
 add_library(${Lib} ${Lib_SRC_FILES})

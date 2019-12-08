@@ -1,5 +1,7 @@
-#include <iostream>
+#include "application.hpp"
 
-int main() {
-    std::cout << "Hello world from oop_exercise_07!" << std::endl;
+oop::application g_application;
+
+int main(const int argc, char* argv[]) {
+    return g_application.start(argc, argv);
 }
