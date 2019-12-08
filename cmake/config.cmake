@@ -37,5 +37,3 @@ verbose_log(MESSAGE "Main library name: " ${Lib})
 set(PROJECT_THIRD_PARTY_FOLDER ${PROJECT_SOURCE_DIR}/third_party CACHE STRING "Third party folder")
 
 find_package(SDL2)
-find_package(glfw3)
-find_package(imgui)

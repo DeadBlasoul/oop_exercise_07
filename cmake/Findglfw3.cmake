@@ -1,1 +1,0 @@
-add_subdirectory(${PROJECT_THIRD_PARTY_FOLDER}/glfw)
