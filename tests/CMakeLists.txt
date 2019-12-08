@@ -30,11 +30,9 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-set(GTEST_VENDOR google)
-
 foreach(GLIB gmock gmock_main gtest gtest_main)
     set_target_properties(${GLIB} PROPERTIES
-                          FOLDER ${THIRD_PARTY_FOLDER}/${GTEST_VENDOR})
+                          FOLDER gtest)
 endforeach()
 
 
