@@ -4,3 +4,6 @@
 [submodule "third_party/SDL-mirror"]
 	path = third_party/SDL2
 	url = https://github.com/spurious/SDL-mirror.git
+[submodule "third_party/glfw"]
+	path = third_party/glfw
+	url = https://github.com/glfw/glfw.git
