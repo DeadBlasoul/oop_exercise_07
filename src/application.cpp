@@ -119,7 +119,32 @@ void application::construct_toolbar()
 
 void application::open()
 {
-    std::cout << "open\n";
+    std::getline(std::cin, filename_);
+    storage_.clear();
+
+    std::fstream f;
+    f.open(filename_, std::ios_base::in);
+    while (f)
+    {
+        editor::fig_ptr fig;
+
+        std::string header;
+        f >> header;
+        if (header == shape::header)
+        {
+            fig.reset(new shape{});
+        }
+        else if (header == circle::header)
+        {
+            fig.reset(new circle{});
+        }
+        else {
+            break;
+        }
+
+        fig->deserialize(f);
+        storage_.push_back(fig);
+    }
 }
 
 void application::save()
@@ -129,12 +154,14 @@ void application::save()
         save_as();
         return;
     }
-    std::cout << "save\n";
+
+    storage_.save(filename_);
 }
 
 void application::save_as()
 {
-    std::cout << "save_as\n";
+    std::getline(std::cin, filename_);
+    storage_.save(filename_);
 }
 
 void fill_with_style_color(SDL_Renderer* renderer)

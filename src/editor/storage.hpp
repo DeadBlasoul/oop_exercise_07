@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
+#include <fstream>
 
 #include "editor/drawable.hpp"
 #include "editor/figure.hpp"
@@ -103,14 +104,27 @@ namespace oop::editor
             }
         }
 
-        void open(std::string_view filename)
+        void clear()
         {
-            std::vector<fig_ptr> figs;
+            actions_.clear();
+            figures_.clear();
+        }
+
+        void push_back(fig_ptr fig)
+        {
+            figures_.push_back(fig);
         }
 
         void save(std::string_view filename)
         {
+            std::fstream f;
+            f.open(filename.data(), std::ios_base::out);
 
+            for (auto& fig : *this)
+            {
+                fig->serialize(f);
+                f << std::endl;
+            }
         }
 
         using const_iterator = std::vector<fig_ptr>::const_iterator;

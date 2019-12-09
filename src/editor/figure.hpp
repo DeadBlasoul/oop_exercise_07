@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iostream>
 
 #include "system/renderer.hpp"
 #include "editor/drawable.hpp"
@@ -46,6 +47,10 @@ namespace oop::editor
         {
             return false;
         }
+
+        virtual void serialize(std::ostream& file) = 0;
+
+        virtual void deserialize(std::istream& file) = 0;
 
         brush color = { 0, 0, 0 };
 

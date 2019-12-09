@@ -16,13 +16,40 @@ namespace oop
 
     struct shape final : editor::i_figure
     {
+        static auto constexpr header = "SHAPE";
+
+        shape() = default;
+
         explicit shape(std::vector<editor::vec2>&& storage)
             : points_(std::move(storage))
         {}
 
         bool inside(const editor::vec2& v)
         {
-            return isInside(points_.data(), points_.size(), v);
+            return is_inside(points_.data(), points_.size(), v);
+        }
+
+        void serialize(std::ostream& file) override
+        {
+            file << header << " " << points_.size();
+            for (auto& p : points_)
+            {
+                file << " " << p.x << " " << p.y;
+            }
+        }
+
+        void deserialize(std::istream& file) override
+        {
+            points_.clear();
+
+            size_t size;
+            file >> size;
+            for (size_t i = 0; i < size; i++)
+            {
+                editor::vec2 v;
+                file >> v.x >> v.y;
+                points_.push_back(v);
+            }
         }
 
     private:
@@ -42,6 +69,10 @@ namespace oop
 
     struct circle final : editor::i_figure
     {
+        static auto constexpr header = "CIRCLE";
+
+        circle() = default;
+
         explicit circle(const editor::vec2& pos, int radius)
             : pos_(pos)
             , rad_(radius)
@@ -53,6 +84,16 @@ namespace oop
             int y = pos_.y - p.y;
 
             return sqrt(x * x + y * y) <= rad_;
+        }
+
+        void serialize(std::ostream& file) override
+        {
+            file << header << " " << pos_.x << " " << pos_.y << " " << rad_;
+        }
+
+        void deserialize(std::istream& file) override
+        {
+            file >> pos_.x >> pos_.y >> rad_;
         }
 
     private:

@@ -48,6 +48,7 @@ public:
 
     // constructors
     basic_polygon() = default;
+
     basic_polygon(std::istream& stream) {
         for (auto& point : points) {
             stream >> point;
@@ -56,18 +57,18 @@ public:
             throw std::runtime_error("bad polygon initialization");
         }
     }
+
     basic_polygon(const vertex& v) noexcept {
         for (auto& point : points) {
             point = v;
         }
     }
+
     basic_polygon(const std::vector<vertex>& v) noexcept {
         if (v.size() < _NumOfPoints) {
             throw std::runtime_error("too few vertices for initialization");
         }
     }
-
-
 
     // element getters
     reference at(size_t ix) {
