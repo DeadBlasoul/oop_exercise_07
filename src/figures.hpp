@@ -31,7 +31,8 @@ namespace oop
 
         void serialize(std::ostream& file) override
         {
-            file << header << " " << points_.size();
+            auto [r, g, b] = color.convert_u8();
+            file << header << " " << int(r) << " " << int(g) << " " << int(b) << " " << points_.size();
             for (auto& p : points_)
             {
                 file << " " << p.x << " " << p.y;
@@ -41,6 +42,8 @@ namespace oop
         void deserialize(std::istream& file) override
         {
             points_.clear();
+
+            file >> color;
 
             size_t size;
             file >> size;
@@ -88,12 +91,13 @@ namespace oop
 
         void serialize(std::ostream& file) override
         {
-            file << header << " " << pos_.x << " " << pos_.y << " " << rad_;
+            auto [r, g, b] = color.convert_u8();
+            file << header << " " << int(r) << " " << int(g) << " " << int(b) << " " << pos_.x << " " << pos_.y << " " << rad_;
         }
 
         void deserialize(std::istream& file) override
         {
-            file >> pos_.x >> pos_.y >> rad_;
+            file >> color >> pos_.x >> pos_.y >> rad_;
         }
 
     private:

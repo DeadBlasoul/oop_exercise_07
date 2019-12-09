@@ -1,6 +1,7 @@
 #pragma once
 
 #include <tuple>
+#include <istream>
 
 namespace oop::editor
 {
@@ -20,4 +21,14 @@ namespace oop::editor
             return {r * 255, g * 255, b * 255};
         }
     };
+}
+
+inline std::istream& operator>>(std::istream& s, oop::editor::brush& brush)
+{
+    int r, g, b;
+    s >> r >> g >> b;
+
+    brush = oop::editor::brush{r / 255.0f, g / 255.0f, b / 255.0f };
+
+    return s;
 }
