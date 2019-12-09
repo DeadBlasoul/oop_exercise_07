@@ -4,6 +4,7 @@
 
 #include "system/renderer.hpp"
 #include "editor/drawable.hpp"
+#include "editor/brush.hpp"
 
 namespace oop::editor
 {
@@ -33,7 +34,24 @@ namespace oop::editor
         i_figure& operator=(const i_figure&) = default;
         i_figure& operator=(i_figure&&) noexcept = default;
         virtual ~i_figure() = 0;
+
+        void draw(system::renderer& renderer) override final
+        {
+            auto [r, g, b] = color.convert_u8();
+            SDL_SetRenderDrawColor(renderer, r, g, b, SDL_ALPHA_OPAQUE);
+            ondraw(renderer);
+        }
+
+        virtual bool inside(const editor::vec2&)
+        {
+            return false;
+        }
+
+        brush color = { 0, 0, 0 };
+
+    private:
+        virtual void ondraw(system::renderer& renderer) = 0;
     };
 
-
+    inline i_figure::~i_figure() = default;
 }

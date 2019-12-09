@@ -8,11 +8,10 @@
 
 #include "editor/brush.hpp"
 #include "editor/builder.hpp"
+#include "editor/storage.hpp"
 
 namespace oop
 {
-    using cell = std::pair<editor::brush, std::unique_ptr<editor::i_figure>>;
-
     class application final : public system::application_base
     {
     public:
@@ -35,6 +34,6 @@ namespace oop
         editor::brush                      brush_;
         std::string                        filename_ = "";
         std::unique_ptr<editor::i_builder> builder_;
-        std::vector<cell>                  figures_;
+        editor::storage                    storage_;
     };
 }

@@ -2,6 +2,7 @@
 
 #include "editor/drawable.hpp"
 #include "editor/figure.hpp"
+#include "editor/storage.hpp"
 
 namespace oop::editor
 {
@@ -24,6 +25,8 @@ namespace oop::editor
          * @return true if figure complete
          */
         virtual bool next(const SDL_MouseButtonEvent& event) = 0;
+
+        virtual fig_ptr extract() = 0;
     };
 
     inline i_builder::~i_builder() = default;

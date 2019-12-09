@@ -24,25 +24,43 @@ void application::process_event(const SDL_Event& event)
     if (io.WantCaptureMouse && (event.type == SDL_MOUSEBUTTONUP || event.type == SDL_MOUSEBUTTONDOWN)
         || io.WantCaptureKeyboard)
     {
-        if (event.type == SDL_MOUSEBUTTONUP) {
-            builder_.reset(new idle_builder{});
+        return;
+    }
+    
+    if (typeid(*builder_) == typeid(idle_builder))
+    {
+        if (event.type == SDL_MOUSEBUTTONDOWN)
+        {
+            auto& button = event.button;
+            storage_.remove({ button.x, button.y });
         }
     }
     else if (builder_->next(event.button))
     {
-        // TODO: extract figure
+        editor::action act{ editor::action::type::add, builder_->extract() };
+        act.fig->color = brush_;
+        storage_.commit(act);
         builder_.reset(new idle_builder{});
+    }
+
+    if (event.type == SDL_KEYDOWN)
+    {
+        if (event.key.keysym.scancode == SDL_SCANCODE_U)
+        {
+            storage_.undo_last_change();
+        }
     }
 }
 
 void application::construct_frame()
 {
     fill_with_style_color(renderer_);
+    storage_.draw(renderer_);
 
     auto [r, g, b] = brush_.convert_u8();
     SDL_SetRenderDrawColor(renderer_, r, g, b, SDL_ALPHA_OPAQUE);
-
     builder_->draw(renderer_);
+
     construct_toolbar();
 }
 
@@ -82,11 +100,11 @@ void application::construct_toolbar()
 
         if(ImGui::BeginMenu("figure"))
         {
-            ImGui::MenuItem("rhombus");
-            ImGui::MenuItem("pentagon");
-            ImGui::MenuItem("hexagon");
-            if (ImGui::MenuItem("shape"))  builder_.reset(new shape_builder{});
-            if (ImGui::MenuItem("circle")) builder_.reset(new circle_builder{});
+            if (ImGui::MenuItem("tetragon")) builder_.reset(new polygon_builder<4>);
+            if (ImGui::MenuItem("pentagon")) builder_.reset(new polygon_builder<5>);
+            if (ImGui::MenuItem("hexagon"))  builder_.reset(new polygon_builder<6>);
+            if (ImGui::MenuItem("shape"))    builder_.reset(new shape_builder{});
+            if (ImGui::MenuItem("circle"))   builder_.reset(new circle_builder{});
             ImGui::EndMenu();
         }
 
