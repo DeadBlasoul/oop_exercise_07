@@ -58,7 +58,7 @@ namespace oop::editor
 
         void clear()
         {
-            actions_.clear();
+            commands_.clear();
             figures_.clear();
         }
 
@@ -96,7 +96,6 @@ namespace oop::editor
          */
         void undo(std::vector<fig_ptr>& storage);
     private:
-        std::vector<action>  actions_;
         std::vector<cmd_ptr> commands_;
         std::vector<fig_ptr> figures_;
     };
