@@ -3,14 +3,11 @@
 #include "imgui.h"
 #include "imgui_sdl.h"
 #include "imgui_impl_sdl.h"
-#include "imgui_extended.h"
 
 #include <atomic>
 #include <stdexcept>
 
 using namespace oop::system;
-
-// Forward declarations
 
 std::atomic_bool application_base::running_ = false;
 
@@ -48,19 +45,14 @@ application_base::~application_base()
 
 int application_base::start(std::string_view name, int argc, char* argv[])
 {
-    configure();
+//    configure();
     run();
-
     return 0;
-}
-
-void application_base::configure()
-{
 }
 
 void application_base::run()
 {
-    while (true)
+    while (!done_)
     {
         process_events();
         construct_frame();
@@ -74,7 +66,18 @@ void application_base::process_events()
     while (SDL_PollEvent(&event))
     {
         ImGui_ImplSDL2_ProcessEvent(&event);
+        process_event(event);
+
+        if (event.type == SDL_QUIT)
+        {
+            done_ = true;
+        }
     }
+}
+
+void application_base::process_event(const SDL_Event& event)
+{
+    // Placeholder
 }
 
 void application_base::construct_frame()

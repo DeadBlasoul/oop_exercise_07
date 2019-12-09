@@ -9,6 +9,10 @@ namespace oop::system
 {
     class application_base
     {
+    protected:
+        SDL_Window* window_;
+        renderer    renderer_;
+
     public:
         /*!
          * @brief application entry point
@@ -30,10 +34,11 @@ namespace oop::system
         virtual ~application_base();
 
     private:
-        void configure();
         void run();
-        void process_events();
         void update() const;
+        void process_events();
+
+        virtual void process_event(const SDL_Event& event);
 
         virtual void construct_frame();
 
@@ -46,7 +51,6 @@ namespace oop::system
 
     private:
         static std::atomic_bool running_;
-        SDL_Window*             window_;
-        renderer                renderer_;
+        bool                    done_ = false;
     };
 }
