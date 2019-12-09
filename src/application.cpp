@@ -11,6 +11,59 @@ using namespace oop;
 
 static void fill_with_style_color(SDL_Renderer* renderer);
 
+struct command_add final : editor::i_command
+{
+    command_add(const editor::fig_ptr& fig)
+        : fig_{ fig }
+    {}
+
+    bool commit(std::vector<editor::fig_ptr>& figs) override
+    {
+        figs.push_back(fig_);
+        return true;
+    }
+
+    void reset(std::vector<editor::fig_ptr>& figs) override
+    {
+        figs.erase(figs.end() - 1);
+    }
+
+private:
+    editor::fig_ptr fig_;
+};
+
+struct command_remove final : editor::i_command
+{
+    command_remove(const editor::vec2& p)
+        : p{ p }
+        , ix{ 0 }
+    {}
+
+    bool commit(std::vector<editor::fig_ptr>& figs) override
+    {
+        const size_t size = figs.size();
+        for (size_t i = 1; i <= size; ++i)
+        {
+            if (figs[size - i]->inside(p))
+            {
+                fig_ = figs[size - i];
+                ix = figs.erase(figs.begin() + (size - i)) - figs.begin();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void reset(std::vector<editor::fig_ptr>& figs) override
+    {
+        figs.insert(figs.begin() + ix, fig_);
+    }
+
+private:
+    editor::vec2 p;
+    editor::fig_ptr fig_;
+    size_t ix;
+};
 application::application()
     : builder_{new idle_builder{}}
 {
@@ -32,14 +85,18 @@ void application::process_event(const SDL_Event& event)
         if (event.type == SDL_MOUSEBUTTONDOWN)
         {
             auto& button = event.button;
-            storage_.remove({ button.x, button.y });
+            editor::cmd_ptr cmd{ new command_remove({ button.x, button.y }) };
+            storage_.commit(cmd);
         }
     }
     else if (builder_->next(event.button))
     {
-        editor::action act{ editor::action::type::add, builder_->extract() };
-        act.fig->color = brush_;
-        storage_.commit(act);
+        const editor::fig_ptr fig = builder_->extract();
+        fig->color = brush_;
+
+        const editor::cmd_ptr cmd(new command_add{ fig });
+        storage_.commit(cmd);
+
         builder_.reset(new idle_builder{});
     }
 
@@ -47,7 +104,7 @@ void application::process_event(const SDL_Event& event)
     {
         if (event.key.keysym.scancode == SDL_SCANCODE_U)
         {
-            storage_.undo_last_change();
+            storage_.undo();
         }
     }
 }

@@ -4,8 +4,8 @@
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
-#include <iostream>
 #include <fstream>
+#include <vector>
 
 #include "editor/drawable.hpp"
 #include "editor/figure.hpp"
@@ -14,18 +14,19 @@ namespace oop::editor
 {
     using fig_ptr = std::shared_ptr<i_figure>;
 
-    struct action {
-        enum class type {
-            add,
-            remove
-        };
+    struct i_command
+    {
+        virtual ~i_command() = 0;
 
-        type    ty;
-        fig_ptr fig;
-        size_t  ix; // internal value, has no effect in API
+        virtual bool commit(std::vector<fig_ptr>& figs) = 0;
+        virtual void reset(std::vector<fig_ptr>& figs) = 0;
     };
 
-    struct storage : i_drawable
+    inline i_command::~i_command() = default;
+
+    typedef std::shared_ptr<i_command> cmd_ptr;
+
+    struct storage final : i_drawable
     {
         void draw(system::renderer& renderer) override
         {
@@ -35,73 +36,24 @@ namespace oop::editor
             }
         }
 
-        void commit(const action& act) {
-            action commited = act;
-
-            switch (act.ty)
+        void commit(const cmd_ptr& cmd)
+        {
+            if (cmd->commit(figures_))
             {
-            case action::type::add:
-            {
-                figures_.push_back(act.fig);
-                commited.ix = figures_.size() - 1;
-                break;
+                commands_.push_back(cmd);
             }
-            case action::type::remove:
-            {
-                if (auto it = std::find(figures_.begin(), figures_.end(), act.fig); it != figures_.end()) {
-                    commited.ix = figures_.erase(it) - figures_.begin();
-                }
-                else
-                {
-                    throw std::runtime_error("unable to delete unknown figure");
-                }
-                break;
-            }
-            }
-
-            actions_.push_back(commited);
         }
 
-        void undo_last_change()
+        void undo()
         {
-            if (actions_.empty())
+            if (commands_.empty())
             {
                 return;
             }
 
-            auto& last = actions_[actions_.size() - 1];
-
-            switch (last.ty)
-            {
-            case action::type::add:
-            {
-                figures_.erase(figures_.end() - 1);
-                actions_.erase(actions_.end() - 1);
-                break;
-            }
-            case action::type::remove:
-            {
-                auto it  = actions_.end() - 1;
-                auto fig = it->fig;
-                figures_.insert(figures_.begin() + it->ix, fig);
-                actions_.erase(it);
-                break;
-            }
-            }
-        }
-
-        void remove(const vec2& p)
-        {
-            size_t size = figures_.size();
-            for (size_t i = 1; i <= size; ++i)
-            {
-                if (figures_[size - i]->inside(p))
-                {
-                    action act = { action::type::remove, figures_[size - i] };
-                    commit(act);
-                    break;
-                }
-            }
+            const auto last = commands_.end() - 1;
+            (*last)->reset(figures_);
+            commands_.erase(last);
         }
 
         void clear()
@@ -145,6 +97,7 @@ namespace oop::editor
         void undo(std::vector<fig_ptr>& storage);
     private:
         std::vector<action>  actions_;
+        std::vector<cmd_ptr> commands_;
         std::vector<fig_ptr> figures_;
     };
 }
