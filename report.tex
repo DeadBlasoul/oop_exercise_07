@@ -1,0 +1,201 @@
+\documentclass[12pt]{article}
+
+\usepackage{fullpage}
+\usepackage{multicol,multirow}
+\usepackage{tabularx}
+\usepackage{ulem}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{minted}
+
+\usepackage{color} %% это для отображения цвета в коде
+\usepackage{listings} %% собственно, это и есть пакет listings
+
+\lstset{ %
+language=C,                 % выбор языка для подсветки (здесь это С)
+basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+numbers=left,               % где поставить нумерацию строк (слева\справа)
+%numberstyle=\tiny,           % размер шрифта для номеров строк
+stepnumber=1,                   % размер шага между двумя номерами строк
+numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+showspaces=false,            % показывать или нет пробелы специальными отступами
+showstringspaces=false,      % показывать или нет пробелы в строках
+showtabs=false,             % показывать или нет табуляцию в строках
+frame=single,              % рисовать рамку вокруг кода
+tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+breaklines=true,           % автоматически переносить строки (да\нет)
+breakatwhitespace=false, % переносить строки только если есть пробел
+escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+}
+
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\textbf{МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСОЙ ФЕДЕРАЦИИ
+\medskip
+МОСКОВСКИЙ АВЦИАЦИОННЫЙ ИНСТИТУТ
+(НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЬЕЛЬСКИЙ УНИВЕРСТИТЕТ)
+\vfill\vfill
+{\Huge ЛАБОРАТОРНАЯ РАБОТА №7} \\
+по курсу объектно-ориентированное программирование
+I семестр, 2019/20 уч. год}
+\end{center}
+\vfill
+
+Студент \uline{\it {Попов Данила Андреевич, группа М8О-208Б-18}\hfill}
+
+Преподаватель \uline{\it {Журавлёв Андрей Андреевич}\hfill}
+
+\vfill
+\end{titlepage}
+
+\subsection*{Условие}
+
+Спроектировать графический редактор с графическим интерфейсом.
+
+Редактор должен соответствовать следующему функционалу:
+\begin{enumerate}
+\item создание нового документа 
+\item импорт документа из файла
+\item экспорт документа в файл
+\item создание/удаление графических примитивов 
+\item отображение документа на экране
+\item операция undo
+\end{enumerate}
+
+\subsection*{Описание программы}
+
+Исходный код лежит в 8 файлах:
+\begin{enumerate}
+\item app/main.cpp: точка входа в программу
+\item src/application.cpp: определение центрального класса
+\item src/application.hpp: объявление центрального класса
+\item src/builders.hpp: обработчики пользовательского ввода
+\item src/figures.hpp: определение графических примитивов
+\item src/editor/brush.hpp: определение кисти
+\item src/editor/builder.hpp: определение интерфейса обработчика пользовательского ввода
+\item src/editor/drawable.hpp: определение интерфейса графического примитива
+\item src/editor/figure.hpp: определение интерфейса графической фигуры
+\item src/editor/storage.hpp: хранилище текущего состояния канваса 
+\item src/geom/algorithm.hpp
+\item src/geom/point.hpp
+\item src/geom/polygon.hpp
+\item src/system/application\_base.cpp: определение базового класса приложения
+\item src/system/application\_base.hpp: объявление базового класса приложения
+\item src/system/renderer.hpp: класс отрисовщика
+\item src/system/sdl2.cpp: sdl2 C++ wrapper 
+\item src/system/sdl2.hpp
+
+\end{enumerate}
+
+\subsection*{Дневник отладки}
+
+Не смог осилить выпадающие окошки. Сохранение и открытие документов происходит через командную строку. 
+
+\subsection*{Недочёты}
+
+Сериализатор до жути тривиальный.
+
+\subsection*{Выводы}
+
+ImGui как панацея от всех болезней. 
+
+\vfill
+
+\subsection*{Исходный код}
+
+
+{\Huge main.cpp}
+\inputminted
+    {C++}{app/main.cpp}
+    \pagebreak
+
+{\Huge src/application.cpp}
+\inputminted
+    {C++}{src/application.cpp}
+    \pagebreak
+
+{\Huge src/application.hpp}
+\inputminted
+    {C++}{src/application.hpp}
+    \pagebreak
+
+{\Huge src/builders.hpp}
+\inputminted
+    {C++}{src/builders.hpp}
+    \pagebreak
+
+{\Huge src/figures.hpp}
+\inputminted
+    {C++}{src/figures.hpp}
+    \pagebreak
+
+{\Huge src/editor/brush.hpp}
+\inputminted
+    {C++}{src/editor/brush.hpp}
+    \pagebreak
+
+{\Huge src/editor/builder.hpp}
+\inputminted
+    {C++}{src/editor/builder.hpp}
+    \pagebreak
+
+{\Huge src/editor/drawable.hpp}
+\inputminted
+    {C++}{src/editor/drawable.hpp}
+    \pagebreak
+
+{\Huge src/editor/figure.hpp}
+\inputminted
+    {C++}{src/editor/figure.hpp}
+    \pagebreak
+
+{\Huge src/editor/storage.hpp}
+\inputminted
+    {C++}{src/editor/storage.hpp}
+    \pagebreak
+
+{\Huge src/geom/algorithm.hpp}
+\inputminted
+    {C++}{src/geom/algorithm.hpp}
+    \pagebreak
+
+{\Huge src/geom/point.hpp}
+\inputminted
+    {C++}{src/geom/point.hpp}
+    \pagebreak
+
+{\Huge src/geom/polygon.hpp}
+\inputminted
+    {C++}{src/geom/polygon.hpp}
+    \pagebreak
+
+{\Huge src/system/application\_base.cpp}
+\inputminted
+    {C++}{src/system/application_base.cpp}
+    \pagebreak
+
+{\Huge src/system/application\_base.hpp}
+\inputminted
+    {C++}{src/system/application_base.hpp}
+    \pagebreak
+
+{\Huge src/system/renderer.hpp}
+\inputminted
+    {C++}{src/system/renderer.hpp}
+    \pagebreak
+
+{\Huge src/system/sdl2.cpp}
+\inputminted
+    {C++}{src/system/sdl2.cpp}
+    \pagebreak
+
+{\Huge src/system/sdl2.hpp}
+\inputminted
+    {C++}{src/system/sdl2.hpp}
+    \pagebreak
+    
+\end{document}
